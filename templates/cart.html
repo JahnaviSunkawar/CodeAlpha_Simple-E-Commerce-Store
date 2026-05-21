@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>SlayCart - Cart</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<nav>
+
+    <div class="logo">
+        SlayCart
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+    </div>
+
+</nav>
+
+<div class="cart-container">
+
+<h1>Your Cart</h1>
+
+<br>
+
+{% set ns = namespace(total=0) %}
+
+{% for item in items %}
+
+<div class="cart-item">
+
+    <div>
+
+        <h2>{{ item.product_name }}</h2>
+
+        <p>₹{{ item.price }}</p>
+
+    </div>
+
+</div>
+
+{% set ns.total = ns.total + item.price %}
+
+{% endfor %}
+
+<div class="total">
+
+Total: ₹{{ ns.total }}
+
+</div>
+
+</div>
+
+</body>
+</html>

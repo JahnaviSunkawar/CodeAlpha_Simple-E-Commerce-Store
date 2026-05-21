@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>E-Commerce Store</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+    <div class="logo">
+       SlayCart
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/view-cart">Cart</a>
+
+        <a href="/login">Login</a>
+
+        <a href="/register">Register</a>
+
+        <a href="/admin">Admin</a>
+
+    </div>
+
+</nav>
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+    <h1>Best Deals Everyday</h1>
+
+    <p>Buy Premium Products At Amazing Prices</p>
+
+</section>
+
+<!-- SEARCH BAR -->
+
+<div style="text-align:center; margin-top:30px;">
+
+    <form method="GET">
+
+        <input type="text"
+               name="search"
+               placeholder="Search Products"
+               style="width:300px; padding:12px; border-radius:8px; border:none;">
+
+        <button style="width:150px;">
+            Search
+        </button>
+
+    </form>
+
+</div>
+
+<!-- PRODUCTS -->
+
+<div class="products">
+
+{% for product in products %}
+
+<div class="card">
+
+    <img src="{{ product.image }}">
+
+    <div class="card-content">
+
+        <h2>{{ product.name }}</h2>
+
+        <p class="price">
+            ₹{{ product.price }}
+        </p>
+
+        <a href="/cart/{{ product.id }}">
+
+            <button>
+                Add To Cart
+            </button>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+
+    <h2>SlayCart E-Commerce Website</h2>
+
+</footer>
+
+</body>
+
+</html>
