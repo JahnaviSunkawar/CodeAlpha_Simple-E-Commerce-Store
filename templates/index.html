@@ -11,8 +11,6 @@
 
 <body>
 
-<!-- NAVBAR -->
-
 <nav>
 
     <div class="logo">
@@ -35,8 +33,6 @@
 
 </nav>
 
-<!-- HERO SECTION -->
-
 <section class="hero">
 
     <h1>Best Deals Everyday</h1>
@@ -44,8 +40,6 @@
     <p>Buy Premium Products At Amazing Prices</p>
 
 </section>
-
-<!-- SEARCH BAR -->
 
 <div style="text-align:center; margin-top:30px;">
 
@@ -64,8 +58,6 @@
 
 </div>
 
-<!-- PRODUCTS -->
-
 <div class="products">
 
 {% for product in products %}
@@ -76,7 +68,12 @@
 
     <div class="card-content">
 
-        <h2>{{ product.name }}</h2>
+        <h2>
+            <a href="/product/{{ product.id }}"
+               style="text-decoration:none;color:black;">
+                {{ product.name }}
+            </a>
+        </h2>
 
         <p class="price">
             ₹{{ product.price }}
@@ -97,8 +94,6 @@
 {% endfor %}
 
 </div>
-
-<!-- FOOTER -->
 
 <footer>
 

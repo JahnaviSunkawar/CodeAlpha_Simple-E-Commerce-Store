@@ -24,6 +24,7 @@ class Product(db.Model):
 
     image = db.Column(db.String(300))
 
+
 # USER TABLE
 class User(db.Model):
 
@@ -32,6 +33,7 @@ class User(db.Model):
     username = db.Column(db.String(100))
 
     password = db.Column(db.String(100))
+
 
 # CART TABLE
 class Cart(db.Model):
@@ -45,6 +47,17 @@ class Cart(db.Model):
     product_name = db.Column(db.String(100))
 
     price = db.Column(db.Integer)
+
+
+# ORDER TABLE
+class Order(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    username = db.Column(db.String(100))
+
+    total_amount = db.Column(db.Integer)
+
 
 # HOME PAGE
 @app.route('/')
@@ -66,6 +79,19 @@ def home():
         'index.html',
         products=products
     )
+
+
+# PRODUCT DETAILS PAGE
+@app.route('/product/<int:id>')
+def product_details(id):
+
+    product = Product.query.get_or_404(id)
+
+    return render_template(
+        'product_details.html',
+        product=product
+    )
+
 
 # REGISTER
 @app.route('/register', methods=['GET', 'POST'])
@@ -89,6 +115,7 @@ def register():
         return redirect('/login')
 
     return render_template('register.html')
+
 
 # LOGIN
 @app.route('/login', methods=['GET', 'POST'])
@@ -115,6 +142,7 @@ def login():
 
     return render_template('login.html')
 
+
 # LOGOUT
 @app.route('/logout')
 def logout():
@@ -124,6 +152,7 @@ def logout():
     session.pop('admin', None)
 
     return redirect('/')
+
 
 # ADMIN LOGIN
 @app.route('/admin-login', methods=['GET', 'POST'])
@@ -144,6 +173,7 @@ def admin_login():
         return "Invalid Admin Credentials"
 
     return render_template('admin_login.html')
+
 
 # ADMIN PAGE
 @app.route('/admin', methods=['GET', 'POST'])
@@ -180,6 +210,7 @@ def admin():
         products=products
     )
 
+
 # DELETE PRODUCT
 @app.route('/delete-product/<int:id>')
 def delete_product(id):
@@ -201,6 +232,7 @@ def delete_product(id):
         db.session.commit()
 
     return redirect('/admin')
+
 
 # ADD TO CART
 @app.route('/cart/<int:id>')
@@ -229,6 +261,7 @@ def cart(id):
 
     return redirect('/view-cart')
 
+
 # VIEW CART
 @app.route('/view-cart')
 def view_cart():
@@ -241,10 +274,51 @@ def view_cart():
         username=session['username']
     ).all()
 
+    total = sum(item.price for item in items)
+
     return render_template(
         'cart.html',
-        items=items
+        items=items,
+        total=total
     )
+
+
+# ORDER PROCESSING
+@app.route('/checkout')
+def checkout():
+
+    if 'username' not in session:
+
+        return redirect('/login')
+
+    items = Cart.query.filter_by(
+        username=session['username']
+    ).all()
+
+    if not items:
+
+        return "Cart is Empty"
+
+    total = sum(item.price for item in items)
+
+    order = Order(
+        username=session['username'],
+        total_amount=total
+    )
+
+    db.session.add(order)
+
+    Cart.query.filter_by(
+        username=session['username']
+    ).delete()
+
+    db.session.commit()
+
+    return render_template(
+        'order_success.html',
+        total=total
+    )
+
 
 # RUN APP
 if __name__ == '__main__':
